@@ -2,6 +2,7 @@ package com.murilonerdx.aondeta.resources;
 
 import com.murilonerdx.aondeta.dto.ProfileDTO;
 import com.murilonerdx.aondeta.services.impl.ProfileService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,9 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Api(tags = "Endpoint de Profile")
+@RestController
+@RequestMapping("/profile")
 public class ProfileController {
 
     @Autowired
