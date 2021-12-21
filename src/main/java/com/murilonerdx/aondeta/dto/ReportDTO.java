@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReportDTO extends RepresentationModel {
+public class ReportDTO extends RepresentationModel<ReportDTO> {
     @Mapping("id")
     private Long id;
     @NotEmpty(message="Digite o nome do lugar, avenida, ou rua relacionado a esse evento")

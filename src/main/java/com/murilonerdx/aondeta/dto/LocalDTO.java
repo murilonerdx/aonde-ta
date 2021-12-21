@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocalDTO extends RepresentationModel {
+public class LocalDTO extends RepresentationModel<LocalDTO> {
     @Mapping("id")
     private Long id;
     @Size(min=8, message="O endereço tem que ter no minimo 8 caracters")

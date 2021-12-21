@@ -1,6 +1,7 @@
 package com.murilonerdx.aondeta.dto;
 
 import com.github.dozermapper.core.Mapping;
+import com.murilonerdx.aondeta.entities.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,13 +10,12 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProfileDTO extends RepresentationModel {
+public class ProfileDTO extends RepresentationModel<ProfileDTO> implements Serializable {
     @Mapping("id")
     private Long id;
 

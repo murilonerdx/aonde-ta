@@ -16,7 +16,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Api(tags = "Endpoint de Profile")
 @RestController
 @RequestMapping("/profile")
-public class ProfileController {
+
+/*
+    Mudança do nome da controller por conta de confusão de sobrescrica na anotação.
+ */
+public class ProfilController {
 
     @Autowired
     private ProfileService profileService;
@@ -28,7 +32,7 @@ public class ProfileController {
     public ProfileDTO create(@RequestBody ProfileDTO profileDTO) {
         ProfileDTO pDTO = profileService.create(profileDTO);
 
-        pDTO.add(linkTo(methodOn(ProfileController.class).findById(pDTO.getId())).withSelfRel());
+        pDTO.add(linkTo(methodOn(ProfilController.class).findById(pDTO.getId())).withSelfRel());
         return pDTO;
     }
 
@@ -38,7 +42,7 @@ public class ProfileController {
         List<ProfileDTO> profiles = profileService.listAll();
         profiles
                 .forEach(p -> p.add(
-                                linkTo(methodOn(ProfileController.class).findById(p.getId())).withSelfRel()
+                                linkTo(methodOn(ProfilController.class).findById(p.getId())).withSelfRel()
                         )
                 );
         return profiles;
@@ -49,7 +53,7 @@ public class ProfileController {
     public ProfileDTO findById(@PathVariable("id") Long id) {
         ProfileDTO profileDTO = profileService.findById(id);
 
-        profileDTO.add(linkTo(methodOn(ProfileController.class).findById(id)).withSelfRel());
+        profileDTO.add(linkTo(methodOn(ProfilController.class).findById(id)).withSelfRel());
         return profileDTO;
     }
 
