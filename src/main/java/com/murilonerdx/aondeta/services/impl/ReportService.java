@@ -1,16 +1,19 @@
 package com.murilonerdx.aondeta.services.impl;
 
+import com.murilonerdx.aondeta.dto.ProfileDTO;
+import com.murilonerdx.aondeta.dto.ReportDTO;
 import com.murilonerdx.aondeta.entities.Profile;
 import com.murilonerdx.aondeta.entities.Report;
 import com.murilonerdx.aondeta.repositories.ReportRepository;
 import com.murilonerdx.aondeta.services.IService;
+import com.murilonerdx.aondeta.util.DozerConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ReportService implements IService<Report, Long> {
+public class ReportService implements IService<ReportDTO, Long> {
 
     @Autowired
     private ReportRepository reportRepository;
@@ -24,13 +27,24 @@ public class ReportService implements IService<Report, Long> {
 
 
     @Override
-    public Report create(Report o) {
-        return reportRepository.save(o);
+    public ReportDTO create(ReportDTO o) {
+        if(o.getId()!=null)
+            o.setId(null);
+
+        Report report = DozerConverter.parseObject(o, Report.class);
+
+        return convertToReportDTO(reportRepository.save(report));
     }
 
     @Override
-    public Report update(Report o, Long aLong) {
-        return reportRepository.save(o);
+    public ReportDTO update(ReportDTO obj, Long id) {
+        Report report = reportRepository.findById(id).orElseThrow(()-> new RuntimeException("ID " + id + " not found"));
+        report.setDescription(obj.getDescription());
+        report.setMomentEvent(obj.getMomentEvent());
+        report.setName(obj.getName());
+        report.setWhatWasStolen(obj.getWhatWasStolen());
+
+        return convertToReportDTO(reportRepository.save(report));
     }
 
     @Override
@@ -39,13 +53,17 @@ public class ReportService implements IService<Report, Long> {
     }
 
     @Override
-    public List<Report> listAll() {
-        return reportRepository.findAll();
+    public List<ReportDTO> listAll() {
+        return DozerConverter.parseListObjects(reportRepository.findAll(), ReportDTO.class);
     }
 
     @Override
-    public Report findById(Long aLong) {
-        return reportRepository.findById(aLong).orElse(null);
+    public ReportDTO findById(Long aLong) {
+        return convertToReportDTO(reportRepository.findById(aLong).orElse(null));
+    }
+
+    public ReportDTO convertToReportDTO(Report report){
+        return DozerConverter.parseObject(report, ReportDTO.class);
     }
 
 }
