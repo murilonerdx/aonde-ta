@@ -3,7 +3,7 @@ package com.murilonerdx.aondeta.config;
 
 import com.murilonerdx.aondeta.security.JwtConfigurer;
 import com.murilonerdx.aondeta.security.JwtTokenProvider;
-import com.murilonerdx.aondeta.services.impl.UserService;
+import com.murilonerdx.aondeta.services.impl.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserService userDetailsService;
+    private ProfileService userDetailsService;
 
     @Autowired
     private JwtTokenProvider tokenProvider;
@@ -48,10 +48,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/aondeTa/**")
+        http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/aondeTa/auth")
+                .antMatchers("/auth/signin", "/auth/signup", "/api-docs/**", "/swagger-ui.html/**","/swagger-ui**", "/swagger-ui/**").permitAll()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/swagger-resources",
+                        "/swagger-resources/configuration/ui",
+                        "/swagger-resources/configuration/security")
                 .permitAll()
+                .antMatchers(HttpMethod.POST, "/profile").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

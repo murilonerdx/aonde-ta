@@ -6,12 +6,17 @@ import com.murilonerdx.aondeta.repositories.ProfileRepository;
 import com.murilonerdx.aondeta.services.IService;
 import com.murilonerdx.aondeta.util.DozerConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class ProfileService implements IService<ProfileDTO, Long> {
+public class ProfileService implements UserDetailsService, IService<ProfileDTO, Long>  {
 
     /*
 
@@ -27,9 +32,11 @@ public class ProfileService implements IService<ProfileDTO, Long> {
     public ProfileDTO create(ProfileDTO o) {
         if(o.getId()!=null)
             o.setId(null);
+        o.setPassword(new BCryptPasswordEncoder().encode(o.getPassword()));
 
         Profile profile = profileRepository.
                 save(DozerConverter.parseObject(o, Profile.class));
+
 
         return convertToProfileDTO(profile);
     }
@@ -64,5 +71,12 @@ public class ProfileService implements IService<ProfileDTO, Long> {
 
     public ProfileDTO convertToProfileDTO(Profile profile){
         return DozerConverter.parseObject(profile, ProfileDTO.class);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Profile> usuario = profileRepository.findByEmail(email);
+        if(usuario.isEmpty()) throw new UsernameNotFoundException("Email não encontrado");
+        return usuario.get();
     }
 }

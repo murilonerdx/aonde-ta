@@ -1,5 +1,6 @@
 package com.murilonerdx.aondeta.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.dozermapper.core.Mapping;
 import com.murilonerdx.aondeta.entities.Profile;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,9 @@ public class ProfileDTO extends RepresentationModel<ProfileDTO> implements Seria
     @Email()
     @NotEmpty(message="Campo e-mail não pode estar vazio")
     private String email;
+
+    @NotEmpty(message="Campo senha não pode estar vazio")
+    private String password;
 
     @NotEmpty(message="O numero do telefone não pode estar vazio")
     private String phone;

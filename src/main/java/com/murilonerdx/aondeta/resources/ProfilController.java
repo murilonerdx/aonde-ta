@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,6 @@ public class ProfilController {
 
     @Autowired
     private ProfileService profileService;
-
 
     @ApiOperation(value = "Create a new profile")
     @PostMapping(produces = {"application/json", "application/xml", "application/x-yaml"},

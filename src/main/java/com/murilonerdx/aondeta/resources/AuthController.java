@@ -2,8 +2,8 @@ package com.murilonerdx.aondeta.resources;
 
 import com.murilonerdx.aondeta.dto.AuthenticationDTO;
 import com.murilonerdx.aondeta.dto.JwtTokenDTO;
-import com.murilonerdx.aondeta.entities.User;
-import com.murilonerdx.aondeta.repositories.UserRepository;
+import com.murilonerdx.aondeta.entities.Profile;
+import com.murilonerdx.aondeta.repositories.ProfileRepository;
 import com.murilonerdx.aondeta.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +33,11 @@ public class AuthController {
     JwtTokenProvider tokenProvider;
 
     @Autowired
-    UserRepository repository;
+    ProfileRepository repository;
 
     @Operation(summary = "Autenticar usuario e retornar token")
     @SuppressWarnings("rawtypes")
-    @PostMapping()
+    @PostMapping("/signin")
     public ResponseEntity signin(@RequestBody AuthenticationDTO credentialDTO) {
         try {
             String email = credentialDTO.getEmail();
@@ -45,7 +45,7 @@ public class AuthController {
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, pasword));
 
-            User user = repository.findByEmail(email).get();
+            Profile user = repository.findByEmail(email).get();
             JwtTokenDTO jwtToken = new JwtTokenDTO();
 
             jwtToken.setEmail(user.getEmail());
@@ -59,23 +59,5 @@ public class AuthController {
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password supplied!");
         }
-    }
-
-    @Operation(summary = "Criar usuario")
-    @SuppressWarnings("rawtypes")
-    @PostMapping("/create")
-    public ResponseEntity create(@RequestBody AuthenticationDTO credentialDTO) {
-        User user = repository.findByEmail(credentialDTO.getEmail()).orElse(null);
-        User newUser = new User();
-
-        if(user!=null)
-            throw new RuntimeException("E-mail já existe");
-
-        newUser.setId(null);
-        newUser.setEmail(credentialDTO.getEmail());
-        newUser.setPassword(new BCryptPasswordEncoder().encode(credentialDTO.getPassword()));
-        repository.save(newUser);
-
-        return ResponseEntity.noContent().build();
     }
 }

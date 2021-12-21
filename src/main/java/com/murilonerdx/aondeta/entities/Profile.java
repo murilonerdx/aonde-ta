@@ -1,12 +1,15 @@
 package com.murilonerdx.aondeta.entities;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class Profile {
+public class Profile implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,6 +17,9 @@ public class Profile {
 
     @Column(unique=true)
     private String email;
+
+    @Column
+    private String password;
 
     private String phone;
     private String cpf;
@@ -23,9 +29,28 @@ public class Profile {
     @OneToMany()
     List<Report> reports = new ArrayList<>();
 
-    public Profile(Long id, String name, String phone, String cpf, String description, byte[] photo) {
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "user_permission", joinColumns = {
+            @JoinColumn(name = "id_user")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "id_permission")
+    })
+    private List<Permission> permissions = new ArrayList<>();
+
+    public List<String> getRoles() {
+        List<String> roles = new ArrayList<>();
+        for (Permission permission : this.permissions
+        ) {
+            roles.add(permission.getDescription());
+        }
+        return roles;
+    }
+
+    public Profile(Long id, String name, String email, String password, String phone, String cpf, String description, byte[] photo) {
         this.id = id;
         this.name = name;
+        this.email = email;
+        this.password = password;
         this.phone = phone;
         this.cpf = cpf;
         this.description = description;
@@ -98,4 +123,44 @@ public class Profile {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.permissions;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }
