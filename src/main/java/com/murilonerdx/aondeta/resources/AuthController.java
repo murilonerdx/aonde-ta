@@ -61,7 +61,7 @@ public class AuthController {
         }
     }
 
-    @Operation(summary = "Autenticar usuario e retornar token")
+    @Operation(summary = "Criar usuario")
     @SuppressWarnings("rawtypes")
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody AuthenticationDTO credentialDTO) {
