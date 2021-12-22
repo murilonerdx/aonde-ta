@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name="TB_LOCAL")
 public class Local {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,7 @@ public class Local {
     @JoinTable(name="local_report",
             joinColumns={@JoinColumn(name="local_id", referencedColumnName="id")},
             inverseJoinColumns={@JoinColumn(name="report_id", referencedColumnName="id")})
-    List<Report> reports = new ArrayList<>();
+    List<Report> reporteds = new ArrayList<>();
 
 
     public Local(Long id, String address, Double latitude, Double longitude, StatusLocal status) {
@@ -76,11 +77,11 @@ public class Local {
         this.status = status;
     }
 
-    public List<Report> getReports() {
-        return reports;
+    public List<Report> getReporteds() {
+        return reporteds;
     }
 
-    public void setReports(List<Report> reports) {
-        this.reports = reports;
+    public void setReporteds(List<Report> reporteds) {
+        this.reporteds = reporteds;
     }
 }

@@ -6,9 +6,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -21,7 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 /*
     Mudança do nome da controller por conta de confusão de sobrescrica na anotação.
  */
-public class ProfilController {
+public class ProfileResource {
 
     @Autowired
     private ProfileService profileService;
@@ -29,10 +29,10 @@ public class ProfilController {
     @ApiOperation(value = "Create a new profile")
     @PostMapping(produces = {"application/json", "application/xml", "application/x-yaml"},
             consumes = {"application/json", "application/xml", "application/x-yaml"})
-    public ProfileDTO create(@RequestBody ProfileDTO profileDTO) {
+    public ProfileDTO create(@RequestBody @Valid ProfileDTO profileDTO) {
         ProfileDTO pDTO = profileService.create(profileDTO);
 
-        pDTO.add(linkTo(methodOn(ProfilController.class).findById(pDTO.getId())).withSelfRel());
+        pDTO.add(linkTo(methodOn(ProfileResource.class).findById(pDTO.getId())).withSelfRel());
         return pDTO;
     }
 
@@ -42,7 +42,7 @@ public class ProfilController {
         List<ProfileDTO> profiles = profileService.listAll();
         profiles
                 .forEach(p -> p.add(
-                                linkTo(methodOn(ProfilController.class).findById(p.getId())).withSelfRel()
+                                linkTo(methodOn(ProfileResource.class).findById(p.getId())).withSelfRel()
                         )
                 );
         return profiles;
@@ -53,7 +53,7 @@ public class ProfilController {
     public ProfileDTO findById(@PathVariable("id") Long id) {
         ProfileDTO profileDTO = profileService.findById(id);
 
-        profileDTO.add(linkTo(methodOn(ProfilController.class).findById(id)).withSelfRel());
+        profileDTO.add(linkTo(methodOn(ProfileResource.class).findById(id)).withSelfRel());
         return profileDTO;
     }
 
@@ -62,6 +62,14 @@ public class ProfilController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         profileService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProfileDTO> update(@PathVariable("id") Long id, @RequestBody @Valid ProfileDTO profileDTO){
+        ProfileDTO profileDTOUpdated = profileService.update(profileDTO, id);
+
+
+        return ResponseEntity.ok().body(profileDTOUpdated);
     }
 
 

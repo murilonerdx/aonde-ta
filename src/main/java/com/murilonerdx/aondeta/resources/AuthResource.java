@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @Api(tags = "Endpoint de autenticação")
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthResource {
 
     @Autowired
     AuthenticationManager authenticationManager;

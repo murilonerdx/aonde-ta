@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/auth/signin", "/auth/signup", "/api-docs/**", "/swagger-ui.html/**","/swagger-ui**", "/swagger-ui/**").permitAll()
+                .antMatchers("/auth/signin", "/h2-console/**","/auth/signup", "/api-docs/**", "/swagger-ui.html/**","/swagger-ui**", "/swagger-ui/**").permitAll()
                 .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources",

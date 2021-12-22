@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Table(name="TB_PROFILE")
 public class Profile implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +26,6 @@ public class Profile implements UserDetails{
     private String cpf;
     private String description;
     private byte[] photo;
-
-    @OneToMany()
-    List<Report> reports = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_permission", joinColumns = {
@@ -106,14 +104,6 @@ public class Profile implements UserDetails{
 
     public void setPhoto(byte[] photo) {
         this.photo = photo;
-    }
-
-    public List<Report> getReports() {
-        return reports;
-    }
-
-    public void setReports(List<Report> reports) {
-        this.reports = reports;
     }
 
     public String getEmail() {

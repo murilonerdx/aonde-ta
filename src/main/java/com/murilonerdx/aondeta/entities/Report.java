@@ -1,14 +1,18 @@
 package com.murilonerdx.aondeta.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import com.murilonerdx.aondeta.entities.Profile;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name="TB_REPORT")
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +25,11 @@ public class Report {
 
     private String whatWasStolen;
 
-    @ManyToMany(mappedBy="reports")
-    private List<Local> locals;
+    @ManyToMany(mappedBy="reporteds")
+    private List<Local> locals = new ArrayList<>();
+    
+    @ManyToOne()
+    private Profile profile;
 
     public Report(Long id, String name, String description, LocalDate momentEvent, String whatWasStolen) {
         this.id = id;
@@ -81,5 +88,13 @@ public class Report {
 
     public void setLocals(List<Local> locals) {
         this.locals = locals;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 }
