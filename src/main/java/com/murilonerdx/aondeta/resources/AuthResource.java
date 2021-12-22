@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 
+import javax.validation.Valid;
+
 @Api(tags = "Endpoint de autenticação")
 @RestController
 @RequestMapping("/auth")
@@ -38,7 +40,7 @@ public class AuthResource {
     @Operation(summary = "Autenticar usuario e retornar token")
     @SuppressWarnings("rawtypes")
     @PostMapping("/signin")
-    public ResponseEntity signin(@RequestBody AuthenticationDTO credentialDTO) {
+    public ResponseEntity signin(@RequestBody @Valid AuthenticationDTO credentialDTO) {
         try {
             String email = credentialDTO.getEmail();
             String pasword = credentialDTO.getPassword();
@@ -53,11 +55,11 @@ public class AuthResource {
             if (user != null) {
                 jwtToken.setToken(tokenProvider.createToken(email, user.getRoles()));
             } else {
-                throw new UsernameNotFoundException("Username " + email + " not found!");
+                throw new UsernameNotFoundException("E-mail " + email + " not found!");
             }
             return ResponseEntity.ok(jwtToken);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username/password supplied!");
+            throw new BadCredentialsException("Invalid e-mail/password supplied!");
         }
     }
 }

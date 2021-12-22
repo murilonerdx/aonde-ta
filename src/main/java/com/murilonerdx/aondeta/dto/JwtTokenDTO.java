@@ -1,7 +1,6 @@
 package com.murilonerdx.aondeta.dto;
 
 import lombok.*;
-import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @Setter

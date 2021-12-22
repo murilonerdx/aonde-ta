@@ -3,6 +3,7 @@ package com.murilonerdx.aondeta.resources;
 import com.murilonerdx.aondeta.dto.LocalDTO;
 import com.murilonerdx.aondeta.services.impl.LocalService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,21 +21,26 @@ public class LocalResource {
     @Autowired
     private LocalService localService;
 
-    @GetMapping()
+
+    @ApiOperation(value = "Find all locals")
+    @GetMapping(produces = {"application/json", "application/x-yaml"})
     public ResponseEntity<List<LocalDTO>> getAll(){
         List<LocalDTO> localDTOs = localService.listAll();
 
         return ResponseEntity.ok().body(localDTOs);
     }
 
-    @GetMapping("/{id}")
+    @ApiOperation(value = "Find local by id")
+    @GetMapping(value="/{id}",produces = {"application/json", "application/x-yaml"})
     public ResponseEntity<LocalDTO> findById(@PathVariable("id") Long id){
         LocalDTO localDTO = localService.findById(id);
 
         return ResponseEntity.ok().body(localDTO);
     }
 
-    @PostMapping()
+    @ApiOperation(value = "Create a new local")
+    @PostMapping(produces = {"application/json", "application/x-yaml"},
+            consumes = {"application/json", "application/x-yaml"})
     public ResponseEntity<?> create(@RequestBody @Valid LocalDTO localDTO, UriComponentsBuilder components){
         LocalDTO localDTOCreate = localService.create(localDTO);
 

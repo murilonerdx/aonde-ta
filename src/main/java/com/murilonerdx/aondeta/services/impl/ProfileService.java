@@ -2,10 +2,15 @@ package com.murilonerdx.aondeta.services.impl;
 
 import com.murilonerdx.aondeta.dto.ProfileDTO;
 import com.murilonerdx.aondeta.entities.Profile;
+import com.murilonerdx.aondeta.exceptions.EmailExistException;
+import com.murilonerdx.aondeta.exceptions.EmailNotFoundError;
+import com.murilonerdx.aondeta.exceptions.ResourceNotFoundException;
 import com.murilonerdx.aondeta.repositories.ProfileRepository;
 import com.murilonerdx.aondeta.services.IService;
 import com.murilonerdx.aondeta.util.DozerConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,11 +39,13 @@ public class ProfileService implements UserDetailsService, IService<ProfileDTO, 
             o.setId(null);
         o.setPassword(new BCryptPasswordEncoder().encode(o.getPassword()));
 
-        Profile profile = profileRepository.
-                save(DozerConverter.parseObject(o, Profile.class));
-
-
-        return convertToProfileDTO(profile);
+        try{
+            Profile profile = profileRepository.
+                    save(DozerConverter.parseObject(o, Profile.class));
+            return convertToProfileDTO(profile);
+        }catch(DataIntegrityViolationException e){
+            throw new EmailExistException("E-mail já cadastrado no banco");
+        }
     }
 
     @Override
@@ -74,9 +81,9 @@ public class ProfileService implements UserDetailsService, IService<ProfileDTO, 
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws RuntimeException {
         Optional<Profile> usuario = profileRepository.findByEmail(email);
-        if(usuario.isEmpty()) throw new UsernameNotFoundException("Email não encontrado");
+        if(usuario.isEmpty()) throw new EmailNotFoundError("Email não encontrado");
         return usuario.get();
     }
 }
