@@ -1,27 +1,24 @@
 package com.murilonerdx.aondeta.entities;
 
+import com.murilonerdx.aondeta.dto.ReportDTO;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name="TB_PROFILE")
-public class Profile implements UserDetails{
+public class Profile extends RepresentationModel<Profile> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    @Column(unique=true)
     private String email;
-
-    @Column
-    private String password;
-
     private String phone;
     private String cpf;
     private String description;
@@ -44,15 +41,31 @@ public class Profile implements UserDetails{
         return roles;
     }
 
-    public Profile(Long id, String name, String email, String password, String phone, String cpf, String description, byte[] photo) {
+    public Profile(Long id, String name, String email, String phone, String cpf, String description, byte[] photo, List<Permission> permissions) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.phone = phone;
         this.cpf = cpf;
         this.description = description;
         this.photo = photo;
+        this.permissions = permissions;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     public Profile() {
@@ -106,51 +119,5 @@ public class Profile implements UserDetails{
         this.photo = photo;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.permissions;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 }

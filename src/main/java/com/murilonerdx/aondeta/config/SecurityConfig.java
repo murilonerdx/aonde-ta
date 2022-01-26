@@ -4,6 +4,7 @@ package com.murilonerdx.aondeta.config;
 import com.murilonerdx.aondeta.security.JwtConfigurer;
 import com.murilonerdx.aondeta.security.JwtTokenProvider;
 import com.murilonerdx.aondeta.services.impl.ProfileService;
+import com.murilonerdx.aondeta.services.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +26,11 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private ProfileService userDetailsService;
+    private UserService userDetailsService;
 
     @Autowired
     private JwtTokenProvider tokenProvider;
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

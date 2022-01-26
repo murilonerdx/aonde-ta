@@ -1,27 +1,17 @@
 package com.murilonerdx.aondeta.services.impl;
 
 import com.murilonerdx.aondeta.dto.LocalDTO;
-import com.murilonerdx.aondeta.dto.ProfileDTO;
 import com.murilonerdx.aondeta.entities.Local;
-import com.murilonerdx.aondeta.entities.Profile;
 import com.murilonerdx.aondeta.repositories.LocalRepository;
 import com.murilonerdx.aondeta.services.IService;
 import com.murilonerdx.aondeta.util.DozerConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class LocalService implements IService<LocalDTO, Long> {
-
-    /*
-
-     * Implementar regras de negocio e retornos de erros customizados
-     * Implementar ainda o sistema de atualizar, também modificações para receber DTO
-     * Converter DTO para Obj
-     */
 
     @Autowired
     private LocalRepository localRepository;

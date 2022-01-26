@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+
+import com.murilonerdx.aondeta.dto.ReportDTO;
 import com.murilonerdx.aondeta.entities.Profile;
+import org.springframework.hateoas.RepresentationModel;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name="TB_REPORT")
-public class Report {
+public class Report extends RepresentationModel<Report> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +29,7 @@ public class Report {
 
     private String whatWasStolen;
 
-    @ManyToMany(mappedBy="reporteds")
+    @ManyToMany(mappedBy="reporteds", cascade = CascadeType.ALL)
     private List<Local> locals = new ArrayList<>();
     
     @ManyToOne()

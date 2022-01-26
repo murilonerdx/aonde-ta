@@ -1,9 +1,10 @@
 package com.murilonerdx.aondeta.services.impl;
 
-import com.murilonerdx.aondeta.dto.ProfileDTO;
 import com.murilonerdx.aondeta.dto.ReportDTO;
-import com.murilonerdx.aondeta.entities.Profile;
+import com.murilonerdx.aondeta.entities.Local;
 import com.murilonerdx.aondeta.entities.Report;
+import com.murilonerdx.aondeta.exceptions.ResourceNotFoundException;
+import com.murilonerdx.aondeta.repositories.LocalRepository;
 import com.murilonerdx.aondeta.repositories.ReportRepository;
 import com.murilonerdx.aondeta.services.IService;
 import com.murilonerdx.aondeta.util.DozerConverter;
@@ -18,20 +19,18 @@ public class ReportService implements IService<ReportDTO, Long> {
     @Autowired
     private ReportRepository reportRepository;
 
-    /*
-
-     * Implementar regras de negocio e retornos de erros customizados
-     * Implementar ainda o sistema de atualizar, também modificações para receber DTO
-     * Converter DTO para Obj
-     */
-
+    @Autowired
+    private LocalRepository localRepository;
 
     @Override
     public ReportDTO create(ReportDTO o) {
         if(o.getId()!=null)
             o.setId(null);
 
+        Local local = localRepository.findById(o.getIdLocal()).orElseThrow(()->new ResourceNotFoundException("ID "+o.getIdLocal()+ "NOT FOUND"));
+
         Report report = DozerConverter.parseObject(o, Report.class);
+        report.getLocals().add(local);
 
         return convertToReportDTO(reportRepository.save(report));
     }

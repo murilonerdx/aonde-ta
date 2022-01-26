@@ -3,7 +3,9 @@ package com.murilonerdx.aondeta.resources;
 import com.murilonerdx.aondeta.dto.AuthenticationDTO;
 import com.murilonerdx.aondeta.dto.JwtTokenDTO;
 import com.murilonerdx.aondeta.entities.Profile;
+import com.murilonerdx.aondeta.entities.User;
 import com.murilonerdx.aondeta.repositories.ProfileRepository;
+import com.murilonerdx.aondeta.repositories.UserRepository;
 import com.murilonerdx.aondeta.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ public class AuthResource {
     JwtTokenProvider tokenProvider;
 
     @Autowired
-    ProfileRepository repository;
+    UserRepository repository;
 
     @Operation(summary = "Autenticar usuario e retornar token")
     @SuppressWarnings("rawtypes")
@@ -47,7 +49,7 @@ public class AuthResource {
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, pasword));
 
-            Profile user = repository.findByEmail(email).get();
+            User user = repository.findByEmail(email).get();
             JwtTokenDTO jwtToken = new JwtTokenDTO();
 
             jwtToken.setEmail(user.getEmail());

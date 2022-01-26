@@ -3,6 +3,8 @@ package com.murilonerdx.aondeta.resources;
 import com.murilonerdx.aondeta.dto.LocalDTO;
 import com.murilonerdx.aondeta.services.impl.LocalService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,9 @@ public class LocalResource {
     @Autowired
     private LocalService localService;
 
-
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header") })
     @ApiOperation(value = "Find all locals")
     @GetMapping(produces = {"application/json", "application/x-yaml"})
     public ResponseEntity<List<LocalDTO>> getAll(){
@@ -30,6 +34,9 @@ public class LocalResource {
         return ResponseEntity.ok().body(localDTOs);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header") })
     @ApiOperation(value = "Find local by id")
     @GetMapping(value="/{id}",produces = {"application/json", "application/x-yaml"})
     public ResponseEntity<LocalDTO> findById(@PathVariable("id") Long id){
@@ -38,6 +45,9 @@ public class LocalResource {
         return ResponseEntity.ok().body(localDTO);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header") })
     @ApiOperation(value = "Create a new local")
     @PostMapping(produces = {"application/json", "application/x-yaml"},
             consumes = {"application/json", "application/x-yaml"})
@@ -52,6 +62,9 @@ public class LocalResource {
         return ResponseEntity.created(uri).build();
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header") })
     @PutMapping("/{id}")
     public ResponseEntity<LocalDTO> update(@PathVariable("id") Long id, @RequestBody @Valid LocalDTO localDTO){
         LocalDTO localDTOUpdated = localService.update(localDTO, id);
